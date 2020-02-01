@@ -25,7 +25,8 @@
     "mocha":   true
   },
   "rules": {
-    
+    "camelcase": ["error", {"allow": ["UNSAFE_componentWillMount"]}],
+    "max-len": ["error", { "code": 170 }],
     "semi": ["error", "never"],
     "comma-dangle": ["error", "always-multiline"],
     "no-console": 0,
