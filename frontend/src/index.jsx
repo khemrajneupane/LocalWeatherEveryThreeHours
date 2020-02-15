@@ -48,7 +48,9 @@ export default class Weather extends React.Component {
             icon: [],
             description: [],
             time: [],
-            temperature:[]
+            temperature:[],
+            city:'',
+            text:'The time now: '
         }
     }
 
@@ -66,7 +68,10 @@ export default class Weather extends React.Component {
                 description: descriptions,
                 icon: imgs,
                 time: times,
-                temperature:temp
+                temperature:temp,
+                city:"Displaying the weather near "+weather.city.name
+                
+
             })
         } catch (error) {
             console.error(error.message)
@@ -81,16 +86,21 @@ export default class Weather extends React.Component {
     };
 
     render() {
-        
+        const today = new Date().toUTCString();
+        console.log(this.state.city)
         const { icon, description, time,temperature } = this.state
         const describe = description.map((d, index) => <td style={this.styles.td} key={index}>{d}</td>)
         const hrMn = time.map((t, index) => <th style={this.styles.th} key={index}>{returnTime(t)}</th>)
         const imageIcon = icon.map((i, index) => <th style={this.styles.th} key={index}><img src={`http://openweathermap.org/img/w/${i}.png`} alt="weatherIcon"/></th>)
         const temp = temperature.map((t,index)=><th style={this.styles.th} key={index}>{t} &deg;C</th>)
+        const conditionalRender= !this.state.city?'Loading...':`${this.state.text} ${today}`
         return (
             <div>
+              
+        <p> {conditionalRender}</p>
                 <table>
                     <thead>
+        <tr><td colSpan="6">{this.state.city}</td></tr>
                         <tr>
                             {hrMn}
                         </tr>
