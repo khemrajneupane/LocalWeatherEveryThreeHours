@@ -13,14 +13,8 @@ const app = new Koa()
 
 app.use(cors())
 
-//https://api.openweathermap.org/data/2.5/forecast?appid=a318e7cbd34562aff0648d5ef8c0d022&lat=35&lon=139&units=metric&cnt=7
-//https://api.openweathermap.org/data/2.5/weather?q=kathmandu&appid=a318e7cbd34562aff0648d5ef8c0d022&lat=35&lon=139&units=metric&cnt=7
-
-//http://localhost:3003/api/weather?lat=27.700001&lon=85.333336&units=metric&cnt=7
-//http://localhost:3003/api/forecast?lat=27.700001&lon=85.333336&units=metric&cnt=7
 const fetchWeather = async ({lat = null, lon=null,prefixWeather= 'weather',prefixForecast= 'forecast'}) => {
-   
-    //const endpoint=`${mapURI}/weather?q=${targetCity}&appid=${appId}&`;
+  
     const noCords = `${mapURI}/${prefixWeather}?q=${targetCity}&appid=${appId}`
     const endpoint = `${mapURI}/${prefixForecast}?appid=${appId}&lat=${lat}&lon=${lon}&units=metric&cnt=7`
     const routingEquasion = lat ===null && lon === null?noCords:endpoint
