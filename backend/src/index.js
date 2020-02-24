@@ -13,7 +13,12 @@ const app = new Koa()
 
 app.use(cors())
 
+<<<<<<< HEAD
 const fetchWeather = async ({ lat = null, lon = null, prefixWeather = 'weather', prefixForecast = 'forecast' }) => {
+=======
+const fetchWeather = async ({lat = null, lon=null,prefixWeather= 'weather',prefixForecast= 'forecast'}) => {
+  
+>>>>>>> c7c7ebb3d601da958a0904e1ddb1bd6968762941
     const noCords = `${mapURI}/${prefixWeather}?q=${targetCity}&appid=${appId}`
     const endpoint = `${mapURI}/${prefixForecast}?appid=${appId}&lat=${lat}&lon=${lon}&units=metric&cnt=7`
     const routingEquasion = lat === null && lon === null ? noCords : endpoint
