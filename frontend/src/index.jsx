@@ -1,20 +1,20 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-const baseURL = process.env.baseURL || 'http://localhost:3003/api'
-console.log(process.env.KEY)
+const baseURL = process.env.baseURL || 'http://localhost:3003/api' //locally
 
-//ktm :   http://localhost:3003/api/forecast?lat=27.700001&lon=85.333336&units=metric&cnt=7
+
+// ktm :   http://localhost:3003/api/forecast?lat=27.700001&lon=85.333336&units=metric&cnt=7
 // weather: http://localhost:3003/api/weather?lat=27.700001&lon=85.333336&units=metric&cnt=7
-const getWeatherFromApi = async (lat, lan) => {
+const getWeatherFromApi = async (lat, lon) => {
     try {
-        const responseForecast = await fetch(`${baseURL}/forecast?lat=${lat}&lon=${lan}`)
-        const responseWeather= await fetch(`${baseURL}/weather`)
+        const responseForecast = await fetch(`${baseURL}/forecast?lat=${lat}&lon=${lon}`)
+        const responseWeather = await fetch(`${baseURL}/weather`)
         const dataForecast = await responseForecast.json()
         const dataWeather = await responseWeather.json()
-        
-      const equationRouting =  lat ===null && lon === null?dataWeather:dataForecast
-       
+
+        const equationRouting = lat === null && lon === null ? dataWeather : dataForecast
+
         return equationRouting
     } catch (error) {
         console.error(error)
@@ -26,13 +26,11 @@ const getPosition = () => new Promise((resolve, reject) => navigator.geolocation
 
 
 getPosition()
-    .then((position) => {
-     
-        ({
-        
+    .then((position) => ({
+
         lat: position.coords.latitude,
         lon: position.coords.longitude,
-    })})
+    }))
     .catch((err) => console.error(err.message))
 
 const returnTime = (unixtime) => {
@@ -48,9 +46,9 @@ export default class Weather extends React.Component {
             icon: [],
             description: [],
             time: [],
-            temperature:[],
-            city:'',
-            text:'The time now: '
+            temperature: [],
+            city: '',
+            text: 'The time now: ',
         }
     }
 
@@ -58,20 +56,16 @@ export default class Weather extends React.Component {
         try {
             const latLan = await getPosition()
             const weather = await getWeatherFromApi(latLan.coords.latitude, latLan.coords.longitude)
-
             const descriptions = weather.list.map((d) => d.weather.map((w) => w.description))
             const times = weather.list.map((d) => d.dt)
-            const temp = weather.list.map(t=>Math.round(t.main.temp))
-
+            const temp = weather.list.map((t) => Math.round(t.main.temp))
             const imgs = weather.list.map((d) => d.weather.map((w) => w.icon))
             this.setState({
                 description: descriptions,
                 icon: imgs,
                 time: times,
-                temperature:temp,
-                city:"Displaying the weather near "+weather.city.name
-                
-
+                temperature: temp,
+                city: `Displaying the weather near ${weather.city.name}`,
             })
         } catch (error) {
             console.error(error.message)
@@ -86,28 +80,29 @@ export default class Weather extends React.Component {
     };
 
     render() {
-        const today = new Date().toUTCString();
-        console.log(this.state.city)
-        const { icon, description, time,temperature } = this.state
+        const today = new Date().toUTCString()
+        const {
+            icon, description, time, temperature,
+        } = this.state
         const describe = description.map((d, index) => <td style={this.styles.td} key={index}>{d}</td>)
         const hrMn = time.map((t, index) => <th style={this.styles.th} key={index}>{returnTime(t)}</th>)
-        const imageIcon = icon.map((i, index) => <th style={this.styles.th} key={index}><img src={`http://openweathermap.org/img/w/${i}.png`} alt="weatherIcon"/></th>)
-        const temp = temperature.map((t,index)=><th style={this.styles.th} key={index}>{t} &deg;C</th>)
-        const conditionalRender= !this.state.city?'Loading...':`${this.state.text} ${today}`
+        const imageIcon = icon.map((i, index) => <th style={this.styles.th} key={index}><img src={`http://openweathermap.org/img/w/${i}.png`} alt="weatherIcon" /></th>)
+        const temp = temperature.map((t, index) => <th style={this.styles.th} key={index}>{t} &deg;C</th>)
+        const conditionalRender = !this.state.city ? 'Loading...' : `${this.state.text} ${today}`
         return (
             <div>
-              
-        <p> {conditionalRender}</p>
+
+                <p> {conditionalRender}</p>
                 <table>
                     <thead>
-        <tr><td colSpan="6">{this.state.city}</td></tr>
+                        <tr><td colSpan="6">{this.state.city}</td></tr>
                         <tr>
                             {hrMn}
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                        {temp}
+                            {temp}
                         </tr>
                         <tr>
                             {imageIcon}
